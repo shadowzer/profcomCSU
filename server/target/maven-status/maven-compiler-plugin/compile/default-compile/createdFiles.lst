@@ -1,0 +1,8 @@
+com\profCom\controller\RemindController.class
+com\profCom\repository\RemindRepository.class
+com\profCom\ApplicationInitializer.class
+com\profCom\entity\Remind.class
+com\profCom\service\ReminderService.class
+com\profCom\config\DatabaseConfig.class
+com\profCom\service\ReminderServiceImpl.class
+com\profCom\config\WebConfig.class
