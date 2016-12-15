@@ -12,4 +12,5 @@ public interface UserService {
     User getByID(long id);
     User save(User user);
     void remove(long id);
+    long autorizate(String login,String password);
 }

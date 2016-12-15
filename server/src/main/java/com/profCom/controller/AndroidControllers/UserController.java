@@ -19,6 +19,12 @@ public class UserController {
     @Autowired
     private UserService service;
 
+    @RequestMapping(value = "/User/autorizate/{login}/{password}", method = RequestMethod.GET)
+    @ResponseBody
+    public long autorizate(@PathVariable("login") String login,@PathVariable("password") String password) {
+        return service.autorizate(login,password);
+    }
+
     @RequestMapping(value = "/User", method = RequestMethod.GET)
     @ResponseBody
     public List<User> getAllUsers() {

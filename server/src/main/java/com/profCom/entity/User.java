@@ -44,6 +44,28 @@ public class User {
     @Column(name="tabNum", length=50)
     public String tabNum;
 
+    @Column(name="login",nullable = false,unique = true)
+    public String login;
+
+    @Column(name="password",nullable = false)
+    public String password;
+
+    public String getLogin() {
+        return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public boolean isFeePay() {
         return feePay;
     }

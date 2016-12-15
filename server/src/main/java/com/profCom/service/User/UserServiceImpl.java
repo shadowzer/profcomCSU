@@ -31,4 +31,14 @@ public class UserServiceImpl implements UserService {
     public void remove(long id) {
         repository.delete(id);
     }
+
+    public long autorizate(String login,String password){
+        List<User> user = repository.findByLogin(login);
+        if (user.isEmpty())
+            return -2;
+        User u=user.remove(0);
+        if (password.equals(u.getPassword()))
+            return u.getId();
+        return -1;
+    }
 }
