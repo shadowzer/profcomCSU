@@ -28,6 +28,8 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -73,6 +75,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         UserInfoStorage userInfoStorage = new UserInfoStorage(LoginActivity.this);
         if (userInfoStorage.isLogin()) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             finish();
             startActivity(intent);
             return;
@@ -100,6 +103,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             @Override
             public void onClick(View view) {
                 attemptLogin();
+            }
+        });
+
+        Button registerButton = (Button) findViewById(R.id.register_button);
+        registerButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -172,6 +184,11 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         boolean cancel = false;
         View focusView = null;
 
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError("Необходимо ввести пароль");
+            focusView = mPasswordView;
+            cancel = true;
+        }
         // Check for a valid password, if the user entered one.
         if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
             mPasswordView.setError(getString(R.string.error_invalid_password));
@@ -216,7 +233,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     private boolean isPasswordValid(String password) {
-        return password.length() > 7;
+        Pattern pattern = Pattern.compile("^[A-Za-z0-9._-]{8,35}$");
+        Matcher matcher = pattern.matcher(password);
+        if (matcher.find()){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -329,10 +352,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             try {
                 UserInfoStorage userInfoStorage = new UserInfoStorage(LoginActivity.this);
-                userInfoStorage.setUserData("1", mEmail, mPassword);
                 // Simulate network access.
                 // TODO: 26.11.2016 NETWORK RETROFIT QUERY
                 Thread.sleep(2000);
+                userInfoStorage.setUserData("1", mEmail, mPassword);
             } catch (InterruptedException e) {
                 return false;
             }
