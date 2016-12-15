@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ru.csu.profcom.RegisterActivity">
+
+    <TextView
+        android:text="Email"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="16dp"
+        android:id="@+id/usernameTextView"
+        android:layout_width="65dp"
+        android:textAlignment="center" />
+
+    <TextView
+        android:text="Имя"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/firstnameTextView"
+        android:layout_alignBaseline="@+id/firstname"
+        android:layout_alignBottom="@+id/firstname"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toStartOf="@+id/lastname"
+        android:textAlignment="center"
+        android:layout_toLeftOf="@+id/lastname" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/firstname"
+        android:layout_marginTop="13dp"
+        android:layout_below="@+id/surname"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/firstnameTextView"
+        android:layout_alignLeft="@+id/surname"
+        android:layout_alignStart="@+id/surname"
+        android:layout_toRightOf="@+id/firstnameTextView" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:layout_alignParentTop="true"
+        android:id="@+id/username"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/usernameTextView"
+        android:layout_toEndOf="@+id/usernameTextView"
+        android:inputType="textEmailAddress" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:layout_marginTop="13dp"
+        android:id="@+id/lastname"
+        android:layout_below="@+id/firstname"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/surnameTextView"
+        android:layout_alignLeft="@+id/surname"
+        android:layout_alignStart="@+id/surname"
+        android:layout_toRightOf="@+id/surnameTextView" />
+
+    <RadioButton
+        android:text="Очное"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:id="@+id/fulltimeLearnRadioBtn"
+        android:layout_below="@+id/group"
+        android:checked="false" />
+
+    <RadioButton
+    android:text="Заочное"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/distanceLearnRadioBtn"
+        android:textAlignment="center"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/fulltimeLearnRadioBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:checked="false" />
+
+    <RadioButton
+    android:text="Контракт"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/contractRadioBtn"
+        android:layout_alignBaseline="@+id/distanceLearnRadioBtn"
+        android:layout_alignBottom="@+id/distanceLearnRadioBtn"
+        android:layout_alignLeft="@+id/budgetRadioBtn"
+        android:layout_alignStart="@+id/budgetRadioBtn" />
+
+    <RadioButton
+        android:text="Бюджет"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/budgetRadioBtn"
+        android:textAlignment="center"
+        android:layout_marginRight="22dp"
+        android:layout_marginEnd="22dp"
+        android:layout_alignBaseline="@+id/fulltimeLearnRadioBtn"
+        android:layout_alignBottom="@+id/fulltimeLearnRadioBtn"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <TextView
+        android:text="Отчество"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/lastnameTextView"
+        android:textAlignment="center"
+        android:layout_alignBaseline="@+id/lastname"
+        android:layout_alignBottom="@+id/lastname"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/firstname"
+        android:layout_toStartOf="@+id/firstname" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:ems="10"
+        android:id="@+id/surname"
+        android:layout_below="@+id/register_password"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="13dp"
+        android:layout_alignLeft="@+id/register_password"
+        android:layout_alignStart="@+id/register_password" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:ems="10"
+        android:id="@+id/group"
+        android:layout_below="@+id/lastname"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="13dp"
+        android:layout_toRightOf="@+id/groupTextView"
+        android:layout_toEndOf="@+id/groupTextView" />
+
+    <TextView
+        android:text="Группа"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/groupTextView"
+        android:textAlignment="center"
+        android:layout_alignBaseline="@+id/group"
+        android:layout_alignBottom="@+id/group"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignRight="@+id/lastnameTextView"
+        android:layout_alignEnd="@+id/lastnameTextView" />
+
+    <Button
+        android:text="Зарегистрироваться"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/registerBtn"
+        android:layout_below="@+id/distanceLearnRadioBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <ProgressBar
+        android:id="@+id/progressbar"
+        style="@android:style/Widget.ProgressBar"
+        android:max="5"
+        android:progress="0"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/registerBtn"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <TextView
+        android:text="Фамилия"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/surnameTextView"
+        android:textAlignment="center"
+        android:layout_alignBaseline="@+id/surname"
+        android:layout_alignBottom="@+id/surname"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/surname"
+        android:layout_toStartOf="@+id/surname" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:id="@+id/register_password"
+        android:inputType="textPassword|textWebPassword"
+        android:layout_below="@+id/username"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="13dp"
+        android:layout_alignLeft="@+id/username"
+        android:layout_alignStart="@+id/username" />
+
+    <TextView
+        android:text="Пароль"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/passwordTextView"
+        android:textAlignment="center"
+        android:layout_alignBaseline="@+id/register_password"
+        android:layout_alignBottom="@+id/register_password"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@+id/register_password"
+        android:layout_toStartOf="@+id/register_password" />
+
+</RelativeLayout>
