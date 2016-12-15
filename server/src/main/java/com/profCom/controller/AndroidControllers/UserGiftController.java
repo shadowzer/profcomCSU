@@ -1,4 +1,4 @@
-package com.profCom.controller;
+package com.profCom.controller.AndroidControllers;
 
 import com.profCom.entity.UserGift;
 import com.profCom.service.UserGift.UserGiftService;

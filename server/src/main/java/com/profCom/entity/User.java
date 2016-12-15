@@ -30,19 +30,45 @@ public class User {
     public String lastName;
 
     @Column(name="feePay", nullable = false, length=15)
-    public String feePay;
+    public boolean feePay;
 
     @Column(name="avatar")
     public byte[] avatar;
 
     @Column(name="budget", nullable = false, length=10)
-    public String budget;
+    public boolean budget;
 
     @Column(name="fulltime", nullable = false, length=10)
-    public String fulltime;
+    public boolean fulltime;
 
     @Column(name="tabNum", length=50)
     public String tabNum;
+
+    public boolean isFeePay() {
+        return feePay;
+    }
+
+    public void setFeePay(boolean feePay) {
+        this.feePay = feePay;
+    }
+
+    public boolean isBudget() {
+        return budget;
+    }
+
+    public void setBudget(boolean budget) {
+        this.budget = budget;
+    }
+
+    public boolean isFulltime() {
+        return fulltime;
+    }
+
+    public void setFulltime(boolean fulltime) {
+        this.fulltime = fulltime;
+    }
+
+
 
 
 
@@ -53,19 +79,6 @@ public class User {
     }
     public void setTabNum(String tabNum) {
         this.tabNum = tabNum;
-    }
-    public String getBudget() {
-
-        return budget;
-    }
-    public void setBudget(String budget) {
-        this.budget = budget;
-    }
-    public String getFulltime() {
-        return fulltime;
-    }
-    public void setFulltime(String fulltime) {
-        this.fulltime = fulltime;
     }
     public long getId() {
         return id;
@@ -90,12 +103,6 @@ public class User {
     }
     public void setLastName(String lastName) {
         this.lastName = lastName;
-    }
-    public String getFeePay() {
-        return feePay;
-    }
-    public void setFeePay(String feePay) {
-        this.feePay = feePay;
     }
     public byte[] getAvatar() {
         return avatar;

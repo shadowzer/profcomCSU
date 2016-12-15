@@ -1,4 +1,4 @@
-package com.profCom.controller;
+package com.profCom.controller.AndroidControllers;
 
 import com.profCom.entity.FAQObject;
 import com.profCom.service.FAQObject.FAQObjectService;

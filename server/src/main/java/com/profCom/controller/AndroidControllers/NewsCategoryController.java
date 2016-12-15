@@ -1,4 +1,4 @@
-package com.profCom.controller;
+package com.profCom.controller.AndroidControllers;
 
 import com.profCom.entity.NewsCategory;
 import com.profCom.service.NewsCategory.NewsCategoryService;
