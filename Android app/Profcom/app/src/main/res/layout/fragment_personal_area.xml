@@ -1,33 +1,17 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="ru.csu.profcom.FragmentPersonalArea">
-
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/textInputLayout">
-
-        <EditText
-            android:id="@+id/oldPassword"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Старый пароль"
-            android:imeOptions="actionUnspecified"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:singleLine="true"/>
-
-    </android.support.design.widget.TextInputLayout>
 
     <Button
         android:text="Сменить пароль"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="35dp"
-        android:id="@+id/button2"
+        android:id="@+id/changePasswordButton"
         android:layout_below="@+id/textInputLayout3"
         android:layout_centerHorizontal="true" />
 
@@ -66,6 +50,64 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Подтвердите пароль"
+            android:imeOptions="actionUnspecified"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:singleLine="true"/>
+
+    </android.support.design.widget.TextInputLayout>
+
+    <TextView
+        android:text="Загрузите своё фото"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="13dp"
+        android:layout_marginStart="13dp"
+        android:id="@+id/textView3"
+        android:layout_alignBottom="@+id/photoLoadButton"
+        android:layout_toRightOf="@+id/photoLoadButton"
+        android:layout_toEndOf="@+id/photoLoadButton"
+        android:layout_marginBottom="17dp" />
+
+    <CheckBox
+        android:text="Месячный взнос"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/feePayCheckBox"
+        android:clickable="false"
+        android:checked="false"
+        android:focusable="false"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="11dp" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/ic_menu_upload"
+        android:id="@+id/photoLoadButton"
+        android:elevation="0dp"
+        android:contentDescription="Upload a photo"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/feePayCheckBox"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <android.support.design.widget.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textInputLayout"
+        android:layout_marginTop="11dp"
+        android:layout_below="@+id/textView3"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
+
+        <EditText
+            android:id="@+id/oldPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Старый пароль"
             android:imeOptions="actionUnspecified"
             android:inputType="textPassword"
             android:maxLines="1"

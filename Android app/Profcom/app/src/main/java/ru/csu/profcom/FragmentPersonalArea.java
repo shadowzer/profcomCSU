@@ -1,12 +1,20 @@
 package ru.csu.profcom;
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
+
+import java.util.zip.Inflater;
 
 
 /**
@@ -22,10 +30,15 @@ public class FragmentPersonalArea extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int PICKFILE_RESULT_CODE = 1;
+    private static final int RESULT_OK = 0;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private ImageButton photoLoaderButton;
+    private Button changePasswordButton;
 
     private OnFragmentInteractionListener mListener;
 
@@ -64,6 +77,17 @@ public class FragmentPersonalArea extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        View inflate = inflater.inflate(R.layout.fragment_personal_area, container, false);
+        photoLoaderButton = (ImageButton) inflate.findViewById(R.id.photoLoadButton);
+        photoLoaderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"));
+                startActivity(webIntent);
+            }
+        });
+
         return inflater.inflate(R.layout.fragment_personal_area, container, false);
     }
 

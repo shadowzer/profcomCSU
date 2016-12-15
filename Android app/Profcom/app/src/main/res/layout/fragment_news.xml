@@ -1,4 +1,4 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -11,50 +11,59 @@
     tools:context="ru.csu.profcom.FragmentNews"
     android:layout_height="match_parent">
 
-    <!-- TODO: Update blank fragment layout -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="// здесь будут невероятно наверстаны новости, но пока как-то так :(" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:weightSum="1">
 
-    <TextView
-        android:text="News#1 by author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView3"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="72dp" />
+                <!--<ListView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/newsList">
 
-    <TextView
-        android:text="news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  news1 text  "
-        android:layout_width="366dp"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView3"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_marginTop="11dp"
-        android:id="@+id/textView6" />
 
-    <TextView
-        android:text="News#2 by author"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView5"
-        android:layout_marginTop="37dp"
-        android:layout_below="@+id/textView6"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
 
-    <TextView
-        android:text="news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  news2 text  "
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView4"
-        android:layout_marginTop="11dp"
-        android:layout_below="@+id/textView5"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+                </ListView>-->
 
-</RelativeLayout>
+                <TextView
+                    android:text="Профком ЧелГУ"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/authorTextView"
+                    android:layout_marginTop="11dp" />
+
+                <TextView
+                    android:text='Уважаемые студенты! \nМногие из вас слышали понятие "Новогодняя стипендия" и с нетерпением ждут ее под конец 2016! \n\nСпешим раскрыть этот миф и сообщить, что официального понятия "новогодняя стипендия" в нашем Законодательстве НЕТ! \n\nТак что же за суммы приходили вам на карточку под Новый Год? Рады объяснить! Существует стипендиальный фонд учебного заведения, и если к концу года есть неизрасходованные средства - они выплачиваются студентам в виде денежного "вознаграждения", что, просим заметить, Официально Запрещено  \n\n#шпаргалкастуденту #стипендияЧеЛГУ #ПрофкомЧелГУ #ЧелГУ #вступай_в_профсоюз'
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/contentTextView"
+                    android:layout_marginTop="20dp" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    app:srcCompat="@drawable/img_example"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/newsImageView"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="0.74" />
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="350dp"
+                    app:srcCompat="@drawable/org_img_example"
+                    android:layout_marginTop="15dp"
+                    android:id="@+id/newsOrgImageView"
+                    android:scaleType="fitCenter"
+                    android:layout_weight="0.74" />
+
+            </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>
