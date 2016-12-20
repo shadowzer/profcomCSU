@@ -31,6 +31,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +39,14 @@ import java.util.List;
 import static android.Manifest.permission.READ_CONTACTS;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import okhttp3.HttpUrl;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.csu.profcom.retrofit.UserAPI;
 
 /**
  * A login screen that offers login via email/password.
@@ -49,13 +58,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "foo@example.com:hello", "bar@example.com:world"
-    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -179,7 +181,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         // Store values at the time of the login attempt.
         String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String password = MD5.toHash(mPasswordView.getText().toString());
 
         boolean cancel = false;
         View focusView = null;
@@ -333,13 +335,16 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Represents an asynchronous login task used to authenticate
      * the user.
      */
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String mEmail;
         private final String mPassword;
+        final UserInfoStorage userInfoStorage = new UserInfoStorage(LoginActivity.this);
+
+        private boolean success;
 
         UserLoginTask(String email, String password) {
             mEmail = email;
@@ -349,27 +354,46 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
+            Retrofit client = new Retrofit.Builder()
+                    .baseUrl(HttpUrl.parse("http://192.168.0.103:88"))
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
 
+            UserAPI service = client.create(UserAPI.class);
+            this.success = false;
             try {
-                UserInfoStorage userInfoStorage = new UserInfoStorage(LoginActivity.this);
                 // Simulate network access.
-                // TODO: 26.11.2016 NETWORK RETROFIT QUERY
-                Thread.sleep(2000);
-                userInfoStorage.setUserData("1", mEmail, mPassword);
-            } catch (InterruptedException e) {
+                Call<Long> call = service.authorize(mEmail, mPassword);
+                Thread.sleep(1000);
+                call.enqueue(new Callback<Long>() {
+                    @Override
+                    public void onResponse(Call<Long> call, Response<Long> response) {
+                        if (response.body() == Long.valueOf(-1)) {
+                            success = false;
+                            onFailure(call, new Throwable("Неверный пароль."));
+                        }
+                        if (response.body() == Long.valueOf(-2)) {
+                            success = false;
+                            onFailure(call, new Throwable("Пользователя с таким логином не существует."));
+                        }
+                        if (response.body() != Long.valueOf(-2) && response.body() != Long.valueOf(-1)) {
+                            userInfoStorage.setUserData(response.body().toString(), mEmail);
+                            success = true;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Long> call, Throwable t) {
+                        success = false;
+                        Toast.makeText(LoginActivity.this, t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+                Thread.sleep(100);
+            } catch (Exception e) {
                 return false;
             }
 
-            for (String credential : DUMMY_CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                if (pieces[0].equals(mEmail)) {
-                    // Account exists, return true if the password matches.
-                    return pieces[1].equals(mPassword);
-                }
-            }
-
-            // TODO: register the new account here.
-            return true;
+            return this.success;
         }
 
         @Override
@@ -377,13 +401,13 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             mAuthTask = null;
             showProgress(false);
 
-            if (success) {
+            if (success || this.success) {
                 finish();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
             } else {
-                mPasswordView.setError(getString(R.string.error_incorrect_password));
-                mPasswordView.requestFocus();
+                mEmailView.setError(getString(R.string.error_authorize_failed));
+                mEmailView.requestFocus();
             }
         }
 
