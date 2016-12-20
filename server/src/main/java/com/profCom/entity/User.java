@@ -50,6 +50,10 @@ public class User {
     @Column(name="password",nullable = false)
     public String password;
 
+    @Column(name="studentGroup",nullable = false, length = 10)
+    public String studentGroup;
+
+
     public String getLogin() {
         return login;
     }
@@ -68,6 +72,14 @@ public class User {
 
     public boolean isFeePay() {
         return feePay;
+    }
+
+    public String getStudentGroup() {
+        return studentGroup;
+    }
+
+    public void setStudentGroup(String studentGroup) {
+        this.studentGroup = studentGroup;
     }
 
     public void setFeePay(boolean feePay) {

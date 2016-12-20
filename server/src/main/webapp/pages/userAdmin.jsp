@@ -8,9 +8,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>$Title$</title>
+    <title>userAdmin</title>
 </head>
 <body>
-$END$
+<a href="/admin/user/create">Создать пользователя</a><br>
+<a href="/admin/user/update">Редактировать пользователя</a><br>
+<a href="/admin/user/search">Найти пользователя</a><br>
+<a href="/admin/user/delete">Удалить пользователя</a><br>
 </body>
 </html>

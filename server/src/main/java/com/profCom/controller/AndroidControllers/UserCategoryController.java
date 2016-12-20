@@ -2,16 +2,12 @@ package com.profCom.controller.AndroidControllers;
 
 import com.profCom.entity.Category;
 import com.profCom.entity.UserCategory;
-import com.profCom.repository.CategoryRepository;
-import com.profCom.repository.UserCategoryRepository;
-import com.profCom.repository.UserRepository;
 import com.profCom.service.Category.CategoryService;
 import com.profCom.service.User.UserService;
 import com.profCom.service.UserCategory.UserCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,5 +34,11 @@ public class UserCategoryController {
     @ResponseBody
     public UserCategory save(@RequestBody UserCategory userCategory) throws Exception {
         return service.save(userCategory);
+    }
+
+    @RequestMapping(value = "/UserCategory/{Uid}/{Cid}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public void remove(@PathVariable("Uid") Long Uid,@PathVariable("Cid") Integer Cid) throws Exception {
+        service.removeByUidAndCid(Uid,Cid);
     }
 }

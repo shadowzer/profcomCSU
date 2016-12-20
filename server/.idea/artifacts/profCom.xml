@@ -44,8 +44,10 @@
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.8.4" />
           <element id="library" level="project" name="Maven: xml-apis:xml-apis:1.0.b2" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.2.2.RELEASE" />
+          <element id="library" level="project" name="Maven: jstl:jstl:1.2" />
         </element>
       </element>
+      <element id="javaee-facet-resources" facet="profComServer/web/Web" />
     </root>
   </artifact>
 </component>

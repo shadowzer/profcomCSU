@@ -8,9 +8,14 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>$Title$</title>
+    <title>AdminPanel</title>
 </head>
 <body>
-$END$
+<a href="/admin/user">Пользователи</a><br>
+<a href="/admin/category">Категории</a><br>
+<a href="/admin/news">Новости</a><br>
+<a href="/admin/events">События</a><br>
+<a href="/admin/questions">Вопросы</a><br>
+<a href="/admin/FAQ">Часто задаваемые вопросы</a><br>
 </body>
 </html>

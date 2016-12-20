@@ -65,6 +65,13 @@ public class UserCategoryServiceImpl implements UserCategoryService {
         return listC;
     }
 
+    public void removeByUidAndCid(long Uid, Integer Cid) {
+        List<UserCategory> listUC = repository.findByUserAndCategory(userService.getByID(Uid), categoryService.getByID(Cid));
+        for (UserCategory a:listUC){
+            repository.delete(a.getId());
+        }
+    }
+
     private boolean searchByUidAndCid( Long Uid,Integer Cid){
         List<UserCategory> userCategory=repository.findByUserAndCategory(userService.getByID(new Long(Uid)),categoryService.getByID(Cid));
         if (userCategory.isEmpty())

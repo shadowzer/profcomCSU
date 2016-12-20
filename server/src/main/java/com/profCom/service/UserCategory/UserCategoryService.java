@@ -18,4 +18,5 @@ public interface UserCategoryService {
     List<UserCategory> findByUser(User u);
     List<UserCategory> findByUserAndCategory(User user, Category category);
     List<Category> getUserCategories(Long Uid);
+    void removeByUidAndCid(long Uid,Integer Cid);
 }
