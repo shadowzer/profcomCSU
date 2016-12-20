@@ -12,13 +12,12 @@ public class UserInfoStorage {
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
-    public void setUserData(String userID, String username, String about) {
+    public void setUserData(String userID, String username) {
         editor = sharedPreferences.edit();
         editor
                 .putBoolean("Login", true)
                 .putString("userID", userID)
                 .putString("username", username)
-                .putString("about", about)
                 .commit();
     }
 
