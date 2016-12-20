@@ -13,4 +13,5 @@ public interface UserService {
     User save(User user);
     void remove(long id);
     long autorizate(String login,String password);
+    User findByLogin(String login);
 }

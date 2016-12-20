@@ -28,5 +28,7 @@
         </select><br>
         <input type="submit" value="Отправить">
      </form>
+    <a href="/admin/user">Назад</a><br>
+    <a href="/">На главную</a><br>
 </body>
 </html>

@@ -41,4 +41,11 @@ public class UserServiceImpl implements UserService {
             return u.getId();
         return -1;
     }
+
+    public User findByLogin(String login) {
+        for (User u:repository.findByLogin(login)){
+            return u;
+        }
+        return null;
+    }
 }

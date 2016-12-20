@@ -12,8 +12,10 @@
 </head>
 <body>
 <a href="/admin/user/create">Создать пользователя</a><br>
-<a href="/admin/user/update">Редактировать пользователя</a><br>
+<a href="/admin/user/updateForm1">Редактировать пользователя</a><br>
 <a href="/admin/user/search">Найти пользователя</a><br>
 <a href="/admin/user/delete">Удалить пользователя</a><br>
+<a href="/">Назад</a><br>
+<a href="/">На главную</a><br>
 </body>
 </html>
