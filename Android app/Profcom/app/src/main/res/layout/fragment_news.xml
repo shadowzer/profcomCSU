@@ -53,15 +53,6 @@
                     android:scaleType="fitCenter"
                     android:layout_weight="0.74" />
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    app:srcCompat="@drawable/org_img_example"
-                    android:layout_marginTop="15dp"
-                    android:id="@+id/newsOrgImageView"
-                    android:scaleType="fitCenter"
-                    android:layout_weight="0.74" />
-
             </LinearLayout>
 
     </ScrollView>
