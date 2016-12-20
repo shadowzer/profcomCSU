@@ -20,6 +20,15 @@ import android.widget.Toast;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.HttpUrl;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.csu.profcom.retrofit.User;
+import ru.csu.profcom.retrofit.UserAPI;
+
 public class RegisterActivity extends AppCompatActivity {
     private ProgressBar mProgressBar;
     private RelativeLayout mActivityView;
@@ -342,6 +351,8 @@ public class RegisterActivity extends AppCompatActivity {
         private final Budget mBudget;
         private final FulltimeEducation mFulltimeEducation;
 
+        private boolean success = false;
+
         UserRegisterTask(String username, String password, String surname, String firstname, String lastname, String group, Budget budget, FulltimeEducation fulltimeEducation) {
             mUsername = username;
             mPassword = password;
@@ -355,18 +366,55 @@ public class RegisterActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
 
+            boolean budg = false;
+            boolean ft = false;
+            if (budget == Budget.BUDGET)
+                budg = true;
+            if (fulltimeEducation == FulltimeEducation.FULLTIME)
+                ft = true;
+
+            Retrofit client = new Retrofit.Builder()
+                    .baseUrl(HttpUrl.parse("http://192.168.0.103:88"))
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+            UserAPI service = client.create(UserAPI.class);
+            this.success = false;
             try {
                 // Simulate network access.
-                // TODO: 26.11.2016 NETWORK RETROFIT QUERY
-                Thread.sleep(2000);
-            } catch (InterruptedException e) {
+                User user = new User();
+                user.setLogin(mUsername);
+                user.setPassword(mPassword);
+                user.setFirstName(mFirstname);
+                user.setLastName(mLastname);
+                user.setSurName(mSurname);
+                user.setGroup(mGroup);
+                user.setBudget(budg);
+                user.setFulltime(ft);
+                user.setFeePay(false);
+                Call<User> call = service.registerUser("application/json", user);
+                Thread.sleep(1000);
+                call.enqueue(new Callback<User>() {
+                    @Override
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        if (response.isSuccessful()){
+                            Toast.makeText(RegisterActivity.this, "Пользователь " + response.body().getLogin() + " успешно зарегистрирован.", Toast.LENGTH_LONG).show();
+                            success = true;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<User> call, Throwable t) {
+                        Toast.makeText(RegisterActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                        success = false;
+                    }
+                });
+                Thread.sleep(100);
+            } catch (Exception e) {
                 return false;
             }
 
-            // TODO: register the new account here.
-            return true;
+            return this.success;
         }
 
         @Override
@@ -374,10 +422,9 @@ public class RegisterActivity extends AppCompatActivity {
             mRegisterTask = null;
             showProgress(false);
 
-            if (success) {
+            if (success || this.success) {
                 finish();
             } else {
-                // TODO: 29.11.2016 REGISTER DID NOT COMMIT. SHOW SOME KIND OF ERROR HERE
                 Snackbar.make(findViewById(R.id.activity_register), "Регистрация не удалась. Попробуйте позже", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
