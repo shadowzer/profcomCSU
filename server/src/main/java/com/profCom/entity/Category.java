@@ -22,16 +22,13 @@ public class Category {
     @Column(name="name", length = 50,nullable = false)
     public String name;
 
-    public void setId(Integer id) {
 
-        this.id = id;
-    }
     public Category() {
     }
-    public int getId() {
+    public Integer getId() {
         return id;
     }
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     public String getName() {
