@@ -33,6 +33,10 @@ public class UserInfoStorage {
         return sharedPreferences.getString("username", null);
     }
 
+    public void setNames(String names) { editor.putString("names", names); }
+
+    public String getNames() { return sharedPreferences.getString("names", null); }
+
     public void clear() {
         editor = sharedPreferences.edit();
         editor
