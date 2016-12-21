@@ -46,6 +46,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import ru.csu.profcom.retrofit.User;
 import ru.csu.profcom.retrofit.UserAPI;
 
 /**
@@ -359,7 +360,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
-            UserAPI service = client.create(UserAPI.class);
+            final UserAPI service = client.create(UserAPI.class);
             this.success = false;
             try {
                 // Simulate network access.
@@ -378,6 +379,20 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         }
                         if (response.body() != Long.valueOf(-2) && response.body() != Long.valueOf(-1)) {
                             userInfoStorage.setUserData(response.body().toString(), mEmail);
+                            Call<User> user = service.getUser(Long.valueOf(userInfoStorage.getUsedID()));
+                            user.enqueue(new Callback<User>() {
+                                @Override
+                                public void onResponse(Call<User> call, Response<User> response) {
+                                    if (response.isSuccessful()){
+                                        userInfoStorage.setNames(response.body().getSurName() + " " + response.body().getFirstName() + " " + response.body().getLastName());
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<User> call, Throwable t) {
+                                    Toast.makeText(LoginActivity.this, t.getLocalizedMessage(), Toast.LENGTH_SHORT).show();
+                                }
+                            });
                             success = true;
                         }
                     }
@@ -402,6 +417,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             showProgress(false);
 
             if (success || this.success) {
+
                 finish();
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
