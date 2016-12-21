@@ -1,4 +1,4 @@
-package com.profCom.controller.WEBcontroller;
+package com.profCom.controller.WEBcontroller.admin.User;
 
 import com.profCom.entity.User;
 import com.profCom.service.User.UserService;
@@ -7,28 +7,19 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.io.UnsupportedEncodingException;
 
 import static java.lang.System.out;
 
 /**
- * Created by VolgiNN on 14.12.2016.
+ * Created by VolgiNN on 21.12.2016.
  */
 @Controller
-public class AdminController {
+public class UserAdminController {
     @Autowired
     UserService us;
-
-    @RequestMapping("/")
-    public String mainAdmin(Model model) {
-        out.println("MAIN ADMIN");
-        return "mainAdmin";
-    }
 
     @RequestMapping("/admin/user")
     public String userAdmin(Model model) {

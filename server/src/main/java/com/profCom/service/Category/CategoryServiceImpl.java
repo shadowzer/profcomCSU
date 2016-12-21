@@ -31,4 +31,9 @@ public class CategoryServiceImpl implements CategoryService {
     public void remove(Integer id) {
         repository.delete(id);
     }
+
+    public Category findByName(String name) {
+        for (Category a:repository.findByName(name)) return a;
+        return null;
+    }
 }

@@ -13,4 +13,5 @@ public interface CategoryService {
     Category getByID(Integer id);
     Category save(Category category);
     void remove(Integer id);
+    Category findByName(String name);
 }
