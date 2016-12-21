@@ -30,4 +30,7 @@ public interface UserAPI {
             @Field("feePay") Boolean feePay*/
             //@Field("group") String group
     );
+
+    @GET("/User/{UserID}")
+    Call<User> getUser(@Path("UserID") Long UserID);
 }
