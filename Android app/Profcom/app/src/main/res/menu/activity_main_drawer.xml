@@ -14,7 +14,11 @@
             android:id="@+id/nav_questions"
             android:icon="@android:drawable/ic_menu_edit"
             android:title="Задать вопрос" />
-
+        <item
+            android:id="@+id/nav_categories"
+            android:icon="@android:drawable/checkbox_on_background"
+            android:title="Категории новостей"
+            />
     </group>
 
 </menu>
