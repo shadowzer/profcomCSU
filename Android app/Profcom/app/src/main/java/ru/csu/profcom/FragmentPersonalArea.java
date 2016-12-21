@@ -12,9 +12,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import java.util.zip.Inflater;
+
+import okhttp3.HttpUrl;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.csu.profcom.retrofit.User;
+import ru.csu.profcom.retrofit.UserAPI;
 
 
 /**
@@ -67,18 +78,15 @@ public class FragmentPersonalArea extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        final View inflate = inflater.inflate(R.layout.fragment_personal_area, container, false);
 
-        View inflate = inflater.inflate(R.layout.fragment_personal_area, container, false);
+
         photoLoaderButton = (ImageButton) inflate.findViewById(R.id.photoLoadButton);
         photoLoaderButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,7 +96,36 @@ public class FragmentPersonalArea extends Fragment {
             }
         });
 
-        return inflater.inflate(R.layout.fragment_personal_area, container, false);
+
+        Retrofit client = new Retrofit.Builder()
+                .baseUrl(HttpUrl.parse("http://192.168.0.103:88"))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        UserAPI service = client.create(UserAPI.class);
+        UserInfoStorage userInfoStorage = new UserInfoStorage(getActivity());
+        if (userInfoStorage.isLogin()) {
+            Call<User> user = service.getUser(Long.valueOf(userInfoStorage.getUsedID()));
+            user.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.isSuccessful()) {
+                        CheckBox feePay = (CheckBox)inflate.findViewById(R.id.feePayCheckBox);
+                        if (response.body().getFeePay())
+                            feePay.setChecked(true);
+                        else
+                            feePay.setChecked(false);
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+                    Toast.makeText(getContext(), "Не удалось получить данные о вашем профиле", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        return inflate;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
