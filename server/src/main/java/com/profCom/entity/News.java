@@ -23,7 +23,7 @@ public class News {
     @Column(name="title",nullable = false)
     public String title;
 
-    @Column(name="image",nullable = false)
+    @Column(name="image",nullable = true)
     public byte[] image;
 
     @OneToOne
