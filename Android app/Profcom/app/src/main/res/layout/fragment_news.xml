@@ -11,50 +11,11 @@
     tools:context="ru.csu.profcom.FragmentNews"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:id="@+id/newsListView">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:weightSum="1">
-
-                <!--<ListView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/newsList">
-
-
-
-                </ListView>-->
-
-                <TextView
-                    android:text="Профком ЧелГУ"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/authorTextView"
-                    android:layout_marginTop="11dp" />
-
-                <TextView
-                    android:text='Уважаемые студенты! \nМногие из вас слышали понятие "Новогодняя стипендия" и с нетерпением ждут ее под конец 2016! \n\nСпешим раскрыть этот миф и сообщить, что официального понятия "новогодняя стипендия" в нашем Законодательстве НЕТ! \n\nТак что же за суммы приходили вам на карточку под Новый Год? Рады объяснить! Существует стипендиальный фонд учебного заведения, и если к концу года есть неизрасходованные средства - они выплачиваются студентам в виде денежного "вознаграждения", что, просим заметить, Официально Запрещено  \n\n#шпаргалкастуденту #стипендияЧеЛГУ #ПрофкомЧелГУ #ЧелГУ #вступай_в_профсоюз'
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:id="@+id/contentTextView"
-                    android:layout_marginTop="20dp" />
-
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="350dp"
-                    app:srcCompat="@drawable/img_example"
-                    android:layout_marginTop="15dp"
-                    android:id="@+id/newsImageView"
-                    android:scaleType="fitCenter"
-                    android:layout_weight="0.74" />
-
-            </LinearLayout>
-
-    </ScrollView>
+    </ListView>
 
 </LinearLayout>
