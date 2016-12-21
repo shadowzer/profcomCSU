@@ -23,7 +23,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/drawerGroupTextView"
+        android:id="@+id/drawerUsernameTextView"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
         android:text="Группа"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
