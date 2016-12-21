@@ -9,6 +9,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import java.util.List;
+
+import okhttp3.HttpUrl;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import ru.csu.profcom.retrofit.Question;
+import ru.csu.profcom.retrofit.QuestionAPI;
+import ru.csu.profcom.retrofit.QuestionAdapter;
+import ru.csu.profcom.retrofit.User;
 
 
 /**
@@ -20,8 +37,7 @@ import android.widget.Button;
  * create an instance of this fragment.
  */
 public class FragmentQuestions extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    private  UserInfoStorage userInfoStorage;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -35,12 +51,14 @@ public class FragmentQuestions extends Fragment {
         // Required empty public constructor
     }
 
+    public static FragmentQuestions newInstance() {
+        return new FragmentQuestions();
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentQuestions.
      */
     // TODO: Rename and change types and number of parameters
@@ -56,17 +74,15 @@ public class FragmentQuestions extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View inflate = inflater.inflate(R.layout.fragment_questions, container, false);
+        final View inflate = inflater.inflate(R.layout.fragment_questions, container, false);
+
+        userInfoStorage = new UserInfoStorage(getActivity());
 
         Button FAQButton = (Button) inflate.findViewById(R.id.FAQ_button);
         FAQButton.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +92,64 @@ public class FragmentQuestions extends Fragment {
                 startActivity(webIntent);
             }
         });
+
+
+        final Retrofit client = new Retrofit.Builder()
+                .baseUrl(HttpUrl.parse("http://192.168.0.103:88"))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final EditText questionEditText = (EditText)inflate.findViewById(R.id.questionEditText);
+        Button askButton = (Button)inflate.findViewById(R.id.ask_button);
+        askButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                QuestionAPI service = client.create(QuestionAPI.class);
+
+                Question question = new Question();
+                question.setQuestion(questionEditText.getText().toString());
+                User user = new User();
+                user.setId(userInfoStorage.getUsedID());
+                question.setQuestioner(user);
+                CheckBox anon = (CheckBox) inflate.findViewById(R.id.anonCheckBox);
+                question.setAnon(anon.isChecked());
+
+                Call<Question> call = service.postQuestion("application/json", question);
+                call.enqueue(new Callback<Question>() {
+                    @Override
+                    public void onResponse(Call<Question> call, Response<Question> response) {
+                        Toast.makeText(getContext(), "Ваш вопрос успешно отправлен", Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<Question> call, Throwable t) {
+                        Toast.makeText(getContext(), t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+                    }
+                });
+                questionEditText.setText("");
+            }
+        });
+
+
+        QuestionAPI service = client.create(QuestionAPI.class);
+        Call<List<Question>> call = service.getUserQuestions(Long.valueOf(userInfoStorage.getUsedID()));
+        call.enqueue(new Callback<List<Question>>() {
+            @Override
+            public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
+                if (response.isSuccessful()) {
+                    List<Question> questions = response.body();
+                    ListView listView = (ListView)inflate.findViewById(R.id.questionsListView);
+                    listView.setAdapter(new QuestionAdapter(inflate.getContext(), questions));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Question>> call, Throwable t) {
+                Toast.makeText(getActivity(), "Не удалось загрузить Ваши вопросы.\n" + t.getLocalizedMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+
+
         return inflate;
     }
 

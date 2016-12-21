@@ -5,58 +5,68 @@
     android:layout_height="match_parent"
     tools:context="ru.csu.profcom.FragmentQuestions">
 
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/questionsListView"
+        android:layout_below="@+id/ask_button"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="15dp">
+
+    </ListView>
+
     <CheckBox
         android:text="Анонимный вопрос"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="9dp"
-        android:id="@+id/checkBox"
-        android:layout_below="@+id/editText"
+        android:id="@+id/anonCheckBox"
+        android:layout_below="@+id/questionEditText"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true" />
-
-    <Button
-        android:text="Задать вопрос"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="22dp"
-        android:id="@+id/ask_button"
-        android:layout_below="@+id/checkBox"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="Перейти к FAQ"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/FAQ_button"
-        android:layout_below="@+id/textView2"
-        android:layout_alignLeft="@+id/ask_button"
-        android:layout_alignStart="@+id/ask_button"
-        android:layout_marginTop="13dp" />
+        android:layout_marginTop="11dp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/textView2"
         tools:text="\tПрежде чем задать вопрос, проверьте страницу с часто задаваемыми вопросами. Возможно на ваш вопрос уже есть ответ!"
+        android:text="\tПрежде чем задать вопрос, проверьте страницу с часто задаваемыми вопросами. Возможно на ваш вопрос уже есть ответ!"
+        android:textAppearance="@style/TextAppearance.AppCompat"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="17dp"
-        android:fontFamily="sans-serif"
-        android:textSize="18sp"
-        android:text="\tПрежде чем задать вопрос, проверьте страницу с часто задаваемыми вопросами. Возможно на ваш вопрос уже есть ответ!" />
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="Перейти к FAQ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/FAQ_button"
+        android:layout_above="@+id/questionsListView"
+        android:layout_alignRight="@+id/anonCheckBox"
+        android:layout_alignEnd="@+id/anonCheckBox" />
+
+    <Button
+        android:text="Задать вопрос"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ask_button"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="29dp"
+        android:layout_marginStart="29dp"
+        android:layout_below="@+id/anonCheckBox"
+        android:layout_toRightOf="@+id/FAQ_button"
+        android:layout_toEndOf="@+id/FAQ_button" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="textMultiLine|textLongMessage"
         android:ems="10"
-        android:id="@+id/editText"
-        android:layout_marginTop="17dp"
+        android:id="@+id/questionEditText"
         android:hint="Ваш вопрос"
-        android:layout_below="@+id/FAQ_button"
+        android:layout_below="@+id/textView2"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
-
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="10dp" />
 </RelativeLayout>
