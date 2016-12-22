@@ -82,6 +82,14 @@
                 android:text="Нет аккаунта? Регистрация"
                 android:textStyle="bold" />
 
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:text="Retrofit server IP"
+                android:ems="10"
+                android:id="@+id/retrofitServer" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

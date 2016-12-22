@@ -75,7 +75,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
 
         // IF LOGGED IN BEFORE DO NOT ASK FOR LOGIN
-        UserInfoStorage userInfoStorage = new UserInfoStorage(LoginActivity.this);
+        final UserInfoStorage userInfoStorage = new UserInfoStorage(LoginActivity.this);
+        if (userInfoStorage.getRetrofitServer() == null)
+            userInfoStorage.setRetrofitServer("http://192.168.0.103:88");
+
         if (userInfoStorage.isLogin()) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -88,6 +91,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
+
+        final EditText IP = (EditText)findViewById(R.id.retrofitServer);
+        IP.setText(userInfoStorage.getRetrofitServer());
 
         mPasswordView = (EditText) findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -105,6 +111,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         mEmailSignInButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+                userInfoStorage.setRetrofitServer(IP.getText().toString());
                 attemptLogin();
             }
         });
@@ -120,6 +127,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+
     }
 
     private void populateAutoComplete() {
@@ -356,7 +364,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
             Retrofit client = new Retrofit.Builder()
-                    .baseUrl(HttpUrl.parse("http://192.168.0.103:88"))
+                    .baseUrl(HttpUrl.parse(userInfoStorage.getRetrofitServer()))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -384,7 +392,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                 @Override
                                 public void onResponse(Call<User> call, Response<User> response) {
                                     if (response.isSuccessful()){
-                                        userInfoStorage.setNames(response.body().getSurName() + " " + response.body().getFirstName() + " " + response.body().getLastName());
+                                        userInfoStorage.setNames(response.body().getSurName() + " " + response.body().getFirstName());
                                     }
                                 }
 
