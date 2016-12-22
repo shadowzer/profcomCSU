@@ -3,12 +3,8 @@ package ru.csu.profcom;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.view.menu.MenuItemImpl;
-import android.telecom.Call;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,14 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.TextView;
 
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
-
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FragmentQuestions.OnFragmentInteractionListener, FragmentPersonalArea.OnFragmentInteractionListener, FragmentNews.OnFragmentInteractionListener, FragmentCategories.OnFragmentInteractionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FragmentQuestions.OnFragmentInteractionListener, FragmentPersonalArea.OnFragmentInteractionListener,
+        FragmentNews.OnFragmentInteractionListener, FragmentCategories.OnFragmentInteractionListener {
     private UserInfoStorage userInfoStorage;
 
     @Override
@@ -54,14 +47,14 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        TextView usernameTextView = (TextView)findViewById(R.id.drawerUsernameTextView);
-        TextView namesTextView = (TextView)findViewById(R.id.drawerNameTextView);
-        usernameTextView.setText(userInfoStorage.getUsername());
-        namesTextView.setText(userInfoStorage.getNames());
-
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerLayout = navigationView.getHeaderView(0);
+
+        TextView usernameTextView = (TextView) headerLayout.findViewById(R.id.drawerUsernameTextView);
+        TextView namesTextView = (TextView) headerLayout.findViewById(R.id.drawerNameTextView);
+        usernameTextView.setText(userInfoStorage.getUsername());
+        namesTextView.setText(userInfoStorage.getNames());
 
     }
 
