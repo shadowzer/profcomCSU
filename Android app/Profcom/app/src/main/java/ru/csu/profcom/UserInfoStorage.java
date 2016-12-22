@@ -33,14 +33,31 @@ public class UserInfoStorage {
         return sharedPreferences.getString("username", null);
     }
 
-    public void setNames(String names) { editor.putString("names", names); }
+    public void setNames(String names) {
+        editor = sharedPreferences.edit();
+        editor.putString("names", names)
+                .commit();
+    }
 
     public String getNames() { return sharedPreferences.getString("names", null); }
 
+    public void setRetrofitServer(String HTTPurl) {
+        editor = sharedPreferences.edit();
+        editor.putString("HTTPurl", HTTPurl)
+                .commit();
+    }
+
+    public String getRetrofitServer() {
+        return sharedPreferences.getString("HTTPurl", null);
+    }
+
     public void clear() {
+        String IP = getRetrofitServer();
         editor = sharedPreferences.edit();
         editor
                 .clear()
                 .commit();
+
+        setRetrofitServer(IP);
     }
 }

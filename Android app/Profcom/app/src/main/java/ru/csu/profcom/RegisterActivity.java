@@ -351,6 +351,7 @@ public class RegisterActivity extends AppCompatActivity {
         private final Budget mBudget;
         private final FulltimeEducation mFulltimeEducation;
 
+        private UserInfoStorage userInfoStorage;
         private boolean success = false;
 
         UserRegisterTask(String username, String password, String surname, String firstname, String lastname, String group, Budget budget, FulltimeEducation fulltimeEducation) {
@@ -362,6 +363,8 @@ public class RegisterActivity extends AppCompatActivity {
             mGroup = group;
             mBudget = budget;
             mFulltimeEducation = fulltimeEducation;
+
+            userInfoStorage = new UserInfoStorage(RegisterActivity.this);
         }
 
         @Override
@@ -375,7 +378,7 @@ public class RegisterActivity extends AppCompatActivity {
                 ft = true;
 
             Retrofit client = new Retrofit.Builder()
-                    .baseUrl(HttpUrl.parse("http://192.168.0.103:88"))
+                    .baseUrl(HttpUrl.parse(userInfoStorage.getRetrofitServer()))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             UserAPI service = client.create(UserAPI.class);
@@ -388,7 +391,7 @@ public class RegisterActivity extends AppCompatActivity {
                 user.setFirstName(mFirstname);
                 user.setLastName(mLastname);
                 user.setSurName(mSurname);
-                user.setGroup(mGroup);
+                user.setStudentGroup(mGroup);
                 user.setBudget(budg);
                 user.setFulltime(ft);
                 user.setFeePay(false);

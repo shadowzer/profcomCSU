@@ -11,6 +11,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import okhttp3.HttpUrl;
@@ -35,16 +37,9 @@ import ru.csu.profcom.retrofit.UserAPI;
  * create an instance of this fragment.
  */
 public class FragmentNews extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
     private List<News> news;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private UserInfoStorage userInfoStorage;
     private OnFragmentInteractionListener mListener;
 
     public FragmentNews() {
@@ -63,8 +58,6 @@ public class FragmentNews extends Fragment {
     public static FragmentNews newInstance(String param1, String param2) {
         FragmentNews fragment = new FragmentNews();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -79,22 +72,23 @@ public class FragmentNews extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View inflate = inflater.inflate(R.layout.fragment_news, container, false);
+        userInfoStorage = new UserInfoStorage(getActivity());
 
         news = new ArrayList<>();
 
         Retrofit client = new Retrofit.Builder()
-                .baseUrl(HttpUrl.parse("http://192.168.0.103:88"))
+                .baseUrl(HttpUrl.parse(userInfoStorage.getRetrofitServer()))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         NewsAPI service = client.create(NewsAPI.class);
-        Call<List<News>> call = service.getAllNews();
+        Call<List<News>> call = service.getAllUserNews(Long.valueOf(userInfoStorage.getUsedID()));
         call.enqueue(new Callback<List<News>>() {
             @Override
             public void onResponse(Call<List<News>> call, Response<List<News>> response) {
                 if (response.isSuccessful()) {
                     news = response.body();
-
+                    Collections.sort(news);
                     ListView listview = (ListView) inflate.findViewById(R.id.newsListView);
                     listview.setAdapter(new NewsAdapter(inflate.getContext(), news));
                 }

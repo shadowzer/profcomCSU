@@ -95,7 +95,7 @@ public class FragmentQuestions extends Fragment {
 
 
         final Retrofit client = new Retrofit.Builder()
-                .baseUrl(HttpUrl.parse("http://192.168.0.103:88"))
+                .baseUrl(HttpUrl.parse(userInfoStorage.getRetrofitServer()))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

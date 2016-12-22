@@ -37,10 +37,8 @@ import ru.csu.profcom.retrofit.UserAPI;
  * create an instance of this fragment.
  */
 public class FragmentPersonalArea extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private UserInfoStorage userInfoStorage;
+
     private static final int PICKFILE_RESULT_CODE = 1;
     private static final int RESULT_OK = 0;
 
@@ -69,8 +67,6 @@ public class FragmentPersonalArea extends Fragment {
     public static FragmentPersonalArea newInstance(String param1, String param2) {
         FragmentPersonalArea fragment = new FragmentPersonalArea();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -85,7 +81,7 @@ public class FragmentPersonalArea extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View inflate = inflater.inflate(R.layout.fragment_personal_area, container, false);
-
+        userInfoStorage = new UserInfoStorage(getActivity());
 
         photoLoaderButton = (ImageButton) inflate.findViewById(R.id.photoLoadButton);
         photoLoaderButton.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +94,7 @@ public class FragmentPersonalArea extends Fragment {
 
 
         Retrofit client = new Retrofit.Builder()
-                .baseUrl(HttpUrl.parse("http://192.168.0.103:88"))
+                .baseUrl(HttpUrl.parse(userInfoStorage.getRetrofitServer()))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
