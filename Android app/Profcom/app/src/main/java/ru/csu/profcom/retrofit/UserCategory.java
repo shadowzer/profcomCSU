@@ -4,6 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class UserCategory {
+    @SerializedName("id")
+    @Expose
+    private long id;
     @SerializedName("user")
     @Expose
     private User user;
@@ -11,6 +14,13 @@ public class UserCategory {
     @Expose
     private Category category;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public User getUser() {
         return user;

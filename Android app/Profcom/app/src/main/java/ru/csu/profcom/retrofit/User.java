@@ -20,9 +20,9 @@ public class User {
     @SerializedName("surName")
     @Expose
     private String surName;
-    @SerializedName("group")
+    @SerializedName("studentGroup")
     @Expose
-    private String group;
+    private String studentGroup;
     @SerializedName("budget")
     @Expose
     private Boolean budget;
@@ -90,12 +90,12 @@ public class User {
         this.surName = surName;
     }
 
-    public String getGroup() {
-        return group;
+    public String getStudentGroup() {
+        return studentGroup;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setStudentGroup(String studentGroup) {
+        this.studentGroup = studentGroup;
     }
 
     public Boolean getBudget() {
