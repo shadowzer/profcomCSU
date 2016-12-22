@@ -7,7 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class News {
+public class News implements Comparable<News> {
 
     @SerializedName("id")
     @Expose
@@ -95,5 +95,14 @@ public class News {
 
     public Date getTestDate() {
         return testDate;
+    }
+
+    @Override
+    public int compareTo(News o) {
+        if (this.getId() > o.getId())
+            return 1;
+        else if (this.getId() < o.getId())
+            return -1;
+        else return 0;
     }
 }

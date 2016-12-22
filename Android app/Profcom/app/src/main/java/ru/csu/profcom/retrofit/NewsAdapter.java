@@ -70,8 +70,6 @@ public class NewsAdapter extends BaseAdapter {
             ByteBuffer buffer = ByteBuffer.wrap(bytes);
             bitmap.copyPixelsFromBuffer(buffer); // 1000000*/
             image.setImageBitmap(bitmap);
-        } else {
-            content.append("\n\n----- Image == null -----");
         }
         return vi;
     }
