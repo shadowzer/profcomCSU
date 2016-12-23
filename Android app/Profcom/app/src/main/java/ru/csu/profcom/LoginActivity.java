@@ -28,8 +28,6 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -387,12 +385,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                         }
                         if (response.body() != Long.valueOf(-2) && response.body() != Long.valueOf(-1)) {
                             userInfoStorage.setUserData(response.body().toString(), mEmail);
-                            Call<User> user = service.getUser(Long.valueOf(userInfoStorage.getUsedID()));
+                            Call<User> user = service.getUser(Long.valueOf(userInfoStorage.getUserID()));
                             user.enqueue(new Callback<User>() {
                                 @Override
                                 public void onResponse(Call<User> call, Response<User> response) {
                                     if (response.isSuccessful()){
                                         userInfoStorage.setNames(response.body().getSurName() + " " + response.body().getFirstName());
+                                        if (response.body().getAvatar() != null)
+                                            userInfoStorage.setUserAvatar(response.body().getAvatar());
                                     }
                                 }
 
