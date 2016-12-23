@@ -1,8 +1,10 @@
 package ru.csu.profcom.retrofit;
 
+import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.os.Environment;
+import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +12,13 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.List;
 
 import ru.csu.profcom.R;
+import ru.csu.profcom.SavePhotoTask;
 
 public class NewsAdapter extends BaseAdapter {
 
@@ -62,23 +68,28 @@ public class NewsAdapter extends BaseAdapter {
         // FIXME: 21.12.2016 FIX MYSQL DATETIME CONVERTING TO JAVA DATE
         //datetime.setText(newsList.get(position).getTestDate().getDate() + "." + (newsList.get(position).getTestDate().getMonth() + 1) + "." + (newsList.get(position).getTestDate().getYear() + 1900)
         //        + "\t\t" + getTimeInteger(newsList.get(position).getTestDate().getHours()) + ":" + getTimeInteger(newsList.get(position).getTestDate().getMinutes()));
-        // FIXME: 21.12.2016 FIND A WAY TO DECODE BLOB MYSQL DATA TO IMAGE
+
         if (newsList.get(position).getImage() != null) {
-            byte[] bytes = newsList.get(position).getImage().getBytes();
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            /*Bitmap bitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
-            ByteBuffer buffer = ByteBuffer.wrap(bytes);
-            bitmap.copyPixelsFromBuffer(buffer); // 1000000*/
-            image.setImageBitmap(bitmap);
+            byte[] bytes = Base64.decode(newsList.get(position).getImage(), Base64.DEFAULT);
+            String fileName = newsList.get(position).getTitle() + newsList.get(position).getDate() + ".jpeg";
+            SavePhotoTask savePhotoTask = new SavePhotoTask(fileName, vi.getContext());
+            savePhotoTask.execute(bytes);
+
+            String path = Environment.getExternalStorageDirectory().getPath() + "/" + fileName;
+            //String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getAbsolutePath() + "/" + fileName;
+            DisplayMetrics displaymetrics = new DisplayMetrics();
+            ((Activity)vi.getContext()).getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+            int width = displaymetrics.widthPixels;
+            Picasso.with(vi.getContext())
+                    .load(new File(path))
+                    .resize(width, width)
+                    .centerCrop()
+                    .into(image);
+            /*Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            image.setImageBitmap(bitmap);*/
         }
         return vi;
     }
 
-    private String getTimeInteger(int integer) {
-        if (integer >= 0 && integer < 10) {
-            return "0" + integer;
-        } else {
-            return String.valueOf(integer);
-        }
-    }
+
 }
