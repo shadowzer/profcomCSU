@@ -133,7 +133,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // Store values at the time of the login attempt.
         String username = mUsernameView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        String password = MD5.toHash(mPasswordView.getText().toString());
         String firstname = mFirstnameView.getText().toString();
         String lastname = mLastnameView.getText().toString();
         String surname = mSurnameView.getText().toString();
@@ -403,6 +403,8 @@ public class RegisterActivity extends AppCompatActivity {
                         if (response.isSuccessful()){
                             Toast.makeText(RegisterActivity.this, "Пользователь " + response.body().getLogin() + " успешно зарегистрирован.", Toast.LENGTH_LONG).show();
                             success = true;
+                        } else {
+                            success = false;
                         }
                     }
 
