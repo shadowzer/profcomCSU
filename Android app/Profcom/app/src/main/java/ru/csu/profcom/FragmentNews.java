@@ -82,7 +82,7 @@ public class FragmentNews extends Fragment {
                 .build();
 
         NewsAPI service = client.create(NewsAPI.class);
-        Call<List<News>> call = service.getAllUserNews(Long.valueOf(userInfoStorage.getUsedID()));
+        Call<List<News>> call = service.getAllUserNews(Long.valueOf(userInfoStorage.getUserID()));
         call.enqueue(new Callback<List<News>>() {
             @Override
             public void onResponse(Call<List<News>> call, Response<List<News>> response) {

@@ -109,7 +109,7 @@ public class FragmentQuestions extends Fragment {
                 Question question = new Question();
                 question.setQuestion(questionEditText.getText().toString());
                 User user = new User();
-                user.setId(userInfoStorage.getUsedID());
+                user.setId(userInfoStorage.getUserID());
                 question.setQuestioner(user);
                 CheckBox anon = (CheckBox) inflate.findViewById(R.id.anonCheckBox);
                 question.setAnon(anon.isChecked());
@@ -132,7 +132,7 @@ public class FragmentQuestions extends Fragment {
 
 
         QuestionAPI service = client.create(QuestionAPI.class);
-        Call<List<Question>> call = service.getUserQuestions(Long.valueOf(userInfoStorage.getUsedID()));
+        Call<List<Question>> call = service.getUserQuestions(Long.valueOf(userInfoStorage.getUserID()));
         call.enqueue(new Callback<List<Question>>() {
             @Override
             public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
