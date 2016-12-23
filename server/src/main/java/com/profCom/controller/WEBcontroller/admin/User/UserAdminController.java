@@ -2,6 +2,7 @@ package com.profCom.controller.WEBcontroller.admin.User;
 
 import com.profCom.entity.User;
 import com.profCom.service.User.UserService;
+import com.profCom.sysLogic.MD5;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,7 +44,7 @@ public class UserAdminController {
         }
         User user = new User();
         user.setLogin(request.getParameter("login"));
-        user.setPassword(request.getParameter("password"));
+        user.setPassword(MD5.toHash(request.getParameter("password")));
         user.setFirstName(request.getParameter("firstname"));
         user.setLastName(request.getParameter("lastname"));
         user.setSurName(request.getParameter("surname"));
