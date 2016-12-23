@@ -3,8 +3,11 @@ package ru.csu.profcom;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.widget.Space;
+import android.util.Base64;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -14,7 +17,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FragmentQuestions.OnFragmentInteractionListener, FragmentPersonalArea.OnFragmentInteractionListener,
@@ -56,6 +64,30 @@ public class MainActivity extends AppCompatActivity
         usernameTextView.setText(userInfoStorage.getUsername());
         namesTextView.setText(userInfoStorage.getNames());
 
+        ImageView drawerAppIcon = (ImageView) headerLayout.findViewById(R.id.drawerAppIcon);
+        Picasso.with(getApplicationContext())
+                .load(R.drawable.app_icon)
+                .transform(new CircularTransformation())
+                .into(drawerAppIcon);
+
+        ImageView userIcon = (ImageView) headerLayout.findViewById(R.id.drawerUserIcon);
+        if (userInfoStorage.getUserAvatar() != null) {
+            byte[] bytes = Base64.decode(userInfoStorage.getUserAvatar(), Base64.DEFAULT);
+            SavePhotoTask savePhotoTask = new SavePhotoTask("profcomAvatar.jpg", getApplicationContext());
+            savePhotoTask.execute(bytes);
+            Picasso.with(getApplicationContext())
+                    .load(new File(Environment.getExternalStorageDirectory().getPath() + "/profcomAvatar.jpg"))
+                    .error(R.drawable.ic_launcher)
+                    .resize(100, 100)
+                    .transform(new CircularTransformation())
+                    .into(userIcon);
+        } else {
+            Picasso.with(getApplicationContext())
+                    .load(R.drawable.ic_launcher)
+                    .resize(100, 100)
+                    .transform(new CircularTransformation())
+                    .into(userIcon);
+        }
     }
 
     @Override
