@@ -9,6 +9,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +23,8 @@ public class CategoryAdapter extends BaseAdapter {
     Context context;
     List<Category> allCategories;
     List<Category> userCategories;
-    HashMap<Category, CheckBox> checked;
+    List<Integer> userCategoryIDs;
+    HashMap<Integer, CheckBox> checked;  // Category.ID - CheckBox.Category
     private static LayoutInflater inflater = null;
 
     public CategoryAdapter(Context context, List<Category> allCategories, List<Category> userCategories) {
@@ -30,20 +32,23 @@ public class CategoryAdapter extends BaseAdapter {
         this.context = context;
         this.allCategories = allCategories;
         this.userCategories = userCategories;
+        this.userCategoryIDs = new ArrayList<>();
+        for(Category item : userCategories)
+            userCategoryIDs.add(item.getId());
         this.checked  = new HashMap<>();
         inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     public void setCheckedItem(Category category, CheckBox checkBox, Boolean isChecked) {
-        if (!isChecked && checked.containsKey(category)){
-            checked.remove(category);
-        } else {
-            checked.put(category, checkBox);
+        if (!isChecked && checked.containsKey(category.getId())){
+            checked.remove(category.getId());
+        } else if (isChecked) {
+            checked.put(category.getId(), checkBox);
         }
     }
 
-    public HashMap<Category, CheckBox> getCheckedItems(){
+    public HashMap<Integer, CheckBox> getCheckedItems(){
         return checked;
     }
 
@@ -73,22 +78,23 @@ public class CategoryAdapter extends BaseAdapter {
             vi = inflater.inflate(R.layout.category_row, null);
         final CheckBox checkBox = (CheckBox) vi.findViewById(R.id.categoryCheckBox);
         checkBox.setText(allCategories.get(position).getName());
-        checkBox.setChecked(false);
         checkBox.setTag(allCategories.get(position));
-        for (int i = 0; i < userCategories.size(); ++i) {
-            //if (userCategories.get(i).getId().equals(((Category)checkBox.getTag()).getId())) {
-            if (userCategories.get(i).getId() == allCategories.get(position).getId()) {
-                checkBox.setChecked(true);
-                setCheckedItem(allCategories.get(position), checkBox, true);
-                break;
-            }
-        }
+        checkBox.setChecked(false);
+
         checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 setCheckedItem((Category) buttonView.getTag(), (CheckBox)buttonView, isChecked);
             }
         });
+
+        for (int i = 0; i < userCategories.size(); ++i) {
+            //if (userCategories.get(i).getId().equals(((Category)checkBox.getTag()).getId())) {
+            if (userCategories.get(i).getId() == allCategories.get(position).getId()) {
+                checkBox.setChecked(true);
+                break;
+            }
+        }
         return vi;
     }
 }

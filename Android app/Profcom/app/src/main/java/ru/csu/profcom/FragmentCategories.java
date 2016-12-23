@@ -3,20 +3,19 @@ package ru.csu.profcom;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,7 +33,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import ru.csu.profcom.retrofit.Category;
 import ru.csu.profcom.retrofit.CategoryAPI;
 import ru.csu.profcom.retrofit.CategoryAdapter;
-import ru.csu.profcom.retrofit.QuestionAPI;
 import ru.csu.profcom.retrofit.User;
 import ru.csu.profcom.retrofit.UserCategory;
 
@@ -128,7 +126,7 @@ public class FragmentCategories extends Fragment {
 
 
     private void fillUserCategories(final View inflate, final CategoryAPI service) {
-        Call<List<Category>> call = service.getUserCategoriesList(Long.valueOf(userInfoStorage.getUsedID()));
+        Call<List<Category>> call = service.getUserCategoriesList(Long.valueOf(userInfoStorage.getUserID()));
         call.enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
@@ -182,19 +180,25 @@ public class FragmentCategories extends Fragment {
                 }
             }
         });
+
     }
 
     private void refreshUserCategories(final View inflate, final CategoryAPI service) {
         final ListView listView = (ListView)inflate.findViewById(R.id.categoriesList);
+        final boolean[] success = { true, true };
 
-        HashMap<Category, CheckBox> checkedCategories = ((CategoryAdapter) listView.getAdapter()).getCheckedItems();
-        for (final Map.Entry<Category, CheckBox> item : checkedCategories.entrySet()) {
-            if (!userCategories.contains(item)) {
+        /**
+         * POSTING NEW CHECKED CATEGORIES
+         */
+        HashMap<Integer, CheckBox> checkedCategories = ((CategoryAdapter) listView.getAdapter()).getCheckedItems();
+        Set<Integer> IDs = ((CategoryAdapter) listView.getAdapter()).getCheckedItems().keySet();
+        for (final Map.Entry<Integer, CheckBox> item : checkedCategories.entrySet()) {
+            final Category category = getCategoryByID(item.getKey());
+
+            if (!userCategoriesContainsID(item.getKey())) {
                 UserCategory userCategory = new UserCategory();
                 User user = new User();
-                Category category = new Category();
-                user.setId(userInfoStorage.getUsedID());
-                category.setId(item.getKey().getId());
+                user.setId(userInfoStorage.getUserID());
                 userCategory.setCategory(category);
                 userCategory.setUser(user);
                 Call<UserCategory> userCategoryCall = service.postUserCategoryRecord("application/json", userCategory);
@@ -202,51 +206,68 @@ public class FragmentCategories extends Fragment {
                     @Override
                     public void onResponse(Call<UserCategory> call, Response<UserCategory> response) {
                         if (!response.isSuccessful()) {
-                            onFailure(call, new Throwable("Не удалось подписаться на категорию '" + item.getKey().getName() + "'"));
-                        } else {
-                            Toast.makeText(getActivity(), "Вы подписались на категорию '" + item.getKey().getName() + "'", Toast.LENGTH_SHORT).show();
+                            success[0] = false;
+                            success[1] = false;
                         }
                     }
 
                     @Override
                     public void onFailure(Call<UserCategory> call, Throwable t) {
-                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Не удалось подписаться на категорию '" + category.getName() + "'\n" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        success[0] = false;
+                        success[1] = false;
                     }
                 });
                 try {
-                    Thread.sleep(100);
-                } catch (Exception ex) {
-
-                }
+                    Thread.sleep(30);
+                } catch (Exception ex) { }
             }
         }
-        checkedCategories = ((CategoryAdapter)listView.getAdapter()).getCheckedItems();
+
+        // FIXME: 23.12.2016 REMOVE THIS. IT'S FOR DEBUG ONLY
+        if (!success[0])
+            Toast.makeText(getActivity(), "Произошла ошибка во время подписки на новые отмеченные категории", Toast.LENGTH_SHORT).show();
+        success[0] = true;
+
+        /**
+         * DELETING UNCHECKED CATEGORIES
+         */
         for (final Category item : userCategories) {
-            if (!checkedCategories.containsKey(item)) {
-                Call<Void> voidCall = service.removeCategoryFromUser(Long.valueOf(userInfoStorage.getUsedID()), item.getId());
+            if (!checkedCategories.containsKey(item.getId())) {
+                Call<Void> voidCall = service.removeCategoryFromUser(Long.valueOf(userInfoStorage.getUserID()), item.getId());
                 voidCall.enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (!response.isSuccessful()) {
-                            onFailure(call, new Throwable("Не удалось отписаться от категории '" + item.getName() + "'"));
+                            success[0] = false;
+                            success[1] = false;
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
-                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), "Не удалось отписаться от категории '" + item.getName() + "'\n" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                        success[1] = false;
                     }
                 });
                 try {
-                    Thread.sleep(100);
+                    Thread.sleep(30);
                 } catch (Exception ex) {
 
                 }
             }
         }
 
+        // FIXME: 23.12.2016 REMOVE THIS TOAST. IT'S FOR DEBUG ONLY
+        if (!success[0])
+            Toast.makeText(getActivity(), "Произошла ошибка во время отписки от категорий", Toast.LENGTH_SHORT).show();
 
-        Call<List<Category>> userCategoriesList = service.getUserCategoriesList(Long.valueOf(userInfoStorage.getUsedID()));
+        if (success[1])
+            Toast.makeText(getActivity(), "Успешно обновлен список отмеченных категорий", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getActivity(), "Ошибка во время обновления списка категорий", Toast.LENGTH_SHORT).show();
+
+        Call<List<Category>> userCategoriesList = service.getUserCategoriesList(Long.valueOf(userInfoStorage.getUserID()));
         userCategoriesList.enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
@@ -267,9 +288,111 @@ public class FragmentCategories extends Fragment {
         });
     }
 
+    private void refreshUserCategoriesV2(final View inflate, final CategoryAPI service) { // delete all prev categories and subs for all checked
+        final boolean[] success = {true, true};
+        for(final Category item : userCategories) {
+            Call<Void> voidCall = service.removeCategoryFromUser(Long.valueOf(userInfoStorage.getUserID()), item.getId());
+            voidCall.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if (!response.isSuccessful()) {
+                        try {
+                            Log.d("Sub response", item.getName() + ":" + response.code() + "\n" + response.errorBody().string());
+                            success[0] = false;
+                            success[1] = false;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else
+                        Log.d("DELETE RESPONSE SUCCESS", item.getName() + ":" + response.code() + "\n");
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Toast.makeText(getActivity(), "Не удалось отписаться от категории '" + item.getName() + "'\n" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    success[1] = false;
+                }
+            });
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        // FIXME: 23.12.2016 REMOVE THIS TOAST. IT'S FOR DEBUG ONLY
+        if (!success[0])
+            Toast.makeText(getActivity(), "Произошла ошибка во время отписки от категорий", Toast.LENGTH_SHORT).show();
+        success[0] = true;
+
+        ListView listView = (ListView)inflate.findViewById(R.id.categoriesList);
+        Set<Integer> IDs = ((CategoryAdapter) listView.getAdapter()).getCheckedItems().keySet();
+        for(Integer item : IDs) {
+            final Category tag = getCategoryByID(item);
+            UserCategory userCategory = new UserCategory();
+            User user = new User();
+            user.setId(userInfoStorage.getUserID());
+            userCategory.setUser(user);
+            userCategory.setCategory(tag);
+            Call<UserCategory> userCategoryCall = service.postUserCategoryRecord("application/json", userCategory);
+            userCategoryCall.enqueue(new Callback<UserCategory>() {
+                @Override
+                public void onResponse(Call<UserCategory> call, Response<UserCategory> response) {
+                    if (!response.isSuccessful()) {
+                        try {
+                            Log.d("Sub response", tag.getName() + ":" + response.code() + "\n" + response.errorBody().string());
+                            success[0] = false;
+                            success[1] = false;
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else
+                        Log.d("SUB RESPONSE SUCCESS", tag.getName() + ":" + response.code() + "\n");
+                }
+
+                @Override
+                public void onFailure(Call<UserCategory> call, Throwable t) {
+                    Toast.makeText(getActivity(), "Не удалось подписаться на категорию '" + tag.getName() + "'\n" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                    success[0] = false;
+                    success[1] = false;
+                }
+            });
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        // FIXME: 23.12.2016 REMOVE THIS. IT'S FOR DEBUG ONLY
+        if (!success[0])
+            Toast.makeText(getActivity(), "Произошла ошибка во время подписки на отмеченные категории", Toast.LENGTH_SHORT).show();
+
+        if (success[1])
+            Toast.makeText(getActivity(), "Успешно обновлен список отмеченных категорий", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(getActivity(), "Ошибка во время обновления списка категорий", Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean userCategoriesContainsID(Integer ID) {
+        for(Category item:userCategories) {
+            if (item.getId() == ID)
+                return true;
+        }
+        return false;
+    }
+
     private Category getCategoryByName(String name) {
         for (Category item : categoryList) {
             if (item.getName().equals(name)) {
+                return item;
+            }
+        }
+        return null;
+    }
+
+    private Category getCategoryByID(Integer ID) {
+        for (Category item : categoryList) {
+            if (item.getId() == ID) {
                 return item;
             }
         }
