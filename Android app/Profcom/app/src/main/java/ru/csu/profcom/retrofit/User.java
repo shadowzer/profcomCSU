@@ -34,7 +34,7 @@ public class User {
     private String tabNum;
     @SerializedName("avatar")
     @Expose
-    private Object avatar;
+    private String avatar;
     @SerializedName("feePay")
     @Expose
     private Boolean feePay;
@@ -122,11 +122,11 @@ public class User {
         this.tabNum = tabNum;
     }
 
-    public Object getAvatar() {
+    public String getAvatar() {
         return avatar;
     }
 
-    public void setAvatar(Object avatar) {
+    public void setAvatar(String avatar) {
         this.avatar = avatar;
     }
 

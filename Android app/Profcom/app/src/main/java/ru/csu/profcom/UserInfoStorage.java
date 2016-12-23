@@ -21,11 +21,21 @@ public class UserInfoStorage {
                 .commit();
     }
 
+    public void setUserAvatar(String avatar) {
+        editor = sharedPreferences.edit();
+        editor.putString("avatar", avatar)
+                .commit();
+    }
+
+    public String getUserAvatar() {
+        return sharedPreferences.getString("avatar", null);
+    }
+
     public boolean isLogin() {
         return sharedPreferences.getBoolean("Login", false);
     }
 
-    public String getUsedID() {
+    public String getUserID() {
         return sharedPreferences.getString("userID", null);
     }
 
