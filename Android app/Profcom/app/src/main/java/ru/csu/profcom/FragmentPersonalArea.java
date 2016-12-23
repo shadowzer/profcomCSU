@@ -1,22 +1,22 @@
 package ru.csu.profcom;
 
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.util.zip.Inflater;
+import java.io.IOException;
 
 import okhttp3.HttpUrl;
 import retrofit2.Call;
@@ -39,15 +39,13 @@ import ru.csu.profcom.retrofit.UserAPI;
 public class FragmentPersonalArea extends Fragment {
     private UserInfoStorage userInfoStorage;
 
-    private static final int PICKFILE_RESULT_CODE = 1;
+    private static final int PICK_IMAGE_REQUEST = 1;
     private static final int RESULT_OK = 0;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private ImageButton photoLoaderButton;
     private Button changePasswordButton;
+
+    private Uri filePath;
 
     private OnFragmentInteractionListener mListener;
 
@@ -63,7 +61,6 @@ public class FragmentPersonalArea extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentPersonalArea.
      */
-    // TODO: Rename and change types and number of parameters
     public static FragmentPersonalArea newInstance(String param1, String param2) {
         FragmentPersonalArea fragment = new FragmentPersonalArea();
         Bundle args = new Bundle();
@@ -87,11 +84,17 @@ public class FragmentPersonalArea extends Fragment {
         photoLoaderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent webIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.google.com"));
-                startActivity(webIntent);
+                showFileChooser();
             }
         });
 
+        changePasswordButton = (Button) inflate.findViewById(R.id.changePasswordButton);
+        changePasswordButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // TODO: 23.12.2016 ADD CHANGING PASSWORD CALL
+            }
+        });
 
         Retrofit client = new Retrofit.Builder()
                 .baseUrl(HttpUrl.parse(userInfoStorage.getRetrofitServer()))
@@ -101,7 +104,7 @@ public class FragmentPersonalArea extends Fragment {
         UserAPI service = client.create(UserAPI.class);
         UserInfoStorage userInfoStorage = new UserInfoStorage(getActivity());
         if (userInfoStorage.isLogin()) {
-            Call<User> user = service.getUser(Long.valueOf(userInfoStorage.getUsedID()));
+            Call<User> user = service.getUser(Long.valueOf(userInfoStorage.getUserID()));
             user.enqueue(new Callback<User>() {
                 @Override
                 public void onResponse(Call<User> call, Response<User> response) {
@@ -124,7 +127,30 @@ public class FragmentPersonalArea extends Fragment {
         return inflate;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
+    private void showFileChooser() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), filePath);
+                // TODO: 23.12.2016 UPLOAD PROFILE AVATAR
+                //photoLoaderButton.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
@@ -159,7 +185,6 @@ public class FragmentPersonalArea extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
 }
